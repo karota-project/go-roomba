@@ -73,47 +73,20 @@ func SeekDock() {
 }
 
 /**
- *
+ * days[0] = sun ... days[6] = sat
  */
-func Schedule() {
-	/*
-	  sun := time.Now()
-	  mon := time.Now()
-	  tue := time.Now()
-	  wed := time.Now()
-	  thu := time.Now()
-	  fri := time.Now()
-	  sat := time.Now()
+func Schedule(days [7]time.Time) {
+	var daybits uint8 = 0x00
+	daybytes := []uint8{}
 
-	  days := 0x00
+	for i, day := range days {
+		if !day.IsZero() {
+			daybits |= 0x01 << (uint8)(i)
+			daybytes = append(daybytes, (uint8)(day.Hour()), (uint8)(day.Minute()))
+		}
+	}
 
-	  d := []Time{
-	    sun,
-	    mon,
-	    tue,
-	    wed,
-	    thu,
-	    fri,
-	    sat
-	  }
-
-	  for i, v range d {
-	    if v != nil {
-	      days |= 0x01 << i
-	    }
-	  }
-
-		sender(SCHEDULE, []uint8{
-	    days,
-	    sun.Hour(), sun.Minute(),
-	    mon.Hour(), mon.Minute(),
-	    tue.Hour(), tue.Minute(),
-	    wed.Hour(), wed.Minute(),
-	    thu.Hour(), thu.Minute(),
-	    fri.Hour(), fri.Minute(),
-	    sat.Hour(), sat.Minute(),
-	  })
-	*/
+	sender(SCHEDULE, append([]uint8{daybits}, daybytes...))
 }
 
 /**
@@ -184,7 +157,7 @@ func DrivePwm(rightPwm int16, leftPwm int16) {
  *
  */
 func Motors(mainBrushDirection bool, sideBrushClockwise bool, mainBrush bool, vacuum bool, sideBrush bool) {
-	var motorbits uint8 = 0x00 //FIXME
+	var motorbits uint8 = 0x00
 
 	args := []bool{sideBrush, vacuum, mainBrush, sideBrushClockwise, mainBrushDirection}
 	for i, v := range args {
@@ -242,7 +215,7 @@ func SchedulingLeds(weekday uint8, schedule bool, clock bool, am bool, pm bool, 
  *
  */
 func DigitLedsRaw(digit [4]uint8) {
-	sender(DIGIT_LEDS_RAW, digit[:])
+	sender(DIGIT_LEDS_RAW, digit[:4])
 }
 
 /**
