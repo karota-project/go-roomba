@@ -311,6 +311,13 @@ func ResumeStream() {
 /**
  *
  */
+func receive(data uint8) {
+
+}
+
+/**
+ *
+ */
 func sender(command uint8, datas []uint8) {
 	if senderFunc != nil {
 		senderFunc(append([]uint8{command}, datas...))
